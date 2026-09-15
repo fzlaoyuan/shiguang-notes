@@ -1,0 +1,16 @@
+node_modules/
+.tools/
+dist/
+release/
+test-results/
+*.log
+*.lnk
+.env
+.env.*
+!.env.example
+data/
+backups/
+*.tmp
+*.zip
+*.exe
+*.dmp

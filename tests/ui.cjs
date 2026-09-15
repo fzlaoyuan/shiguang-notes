@@ -1,0 +1,33 @@
+const {_electron:electron}=require('playwright');const fs=require('node:fs');const path=require('node:path');const assert=require('node:assert/strict');const os=require('node:os');
+const root=path.resolve(__dirname,'..');const dataDir=fs.mkdtempSync(path.join(os.tmpdir(),'shiguang-ui-'));fs.mkdirSync(path.join(root,'test-results'),{recursive:true});
+const errors=[];let app;
+async function launch(){const env={...process.env,SHIGUANG_TEST_DATA:dataDir};delete env.ELECTRON_RUN_AS_NODE;app=await electron.launch({args:[root,'--test-mode'],env});const page=await app.firstWindow();page.on('pageerror',e=>errors.push(e.message));await page.locator('#note-title').waitFor();await page.waitForFunction(()=>document.querySelector('#note-title').value.length>0);return page;}
+(async()=>{try{
+ let page=await launch();await page.screenshot({path:path.join(root,'test-results','main.png')});
+ await page.locator('#new-note').click();await page.locator('#note-title').fill('自动化验收：中文便签');await page.locator('.tiptap').fill('这是一条用于验证持久保存的中文便签。');await page.keyboard.press('Control+s');await page.waitForFunction(()=>document.querySelector('#save-status').textContent.includes('已保存'));
+ await page.locator('[data-command=taskList]').click();assert.equal(await page.locator('.tiptap ul[data-type=taskList]').count(),1);
+ await page.keyboard.press('Control+s');
+ const imagePath=path.join(root,'test-results','pixel.png');fs.writeFileSync(imagePath,Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aWQAAAABJRU5ErkJggg==','base64'));
+ await page.locator('#image-input').setInputFiles(imagePath);await page.locator('.tiptap img').waitFor();await page.keyboard.press('Control+s');
+ await page.locator('#add-folder').click();await page.locator('#folder-name').fill('验收分组');await page.locator('#dialog button[type=submit]').click();await page.locator('[data-view=all]').click();
+ await page.locator('#search').fill('持久保存');await page.waitForFunction(()=>document.querySelectorAll('.note-card').length===1);assert.match(await page.locator('.note-card').innerText(),/自动化验收/);
+ await page.locator('#search').fill('');await page.locator('.note-card').filter({hasText:'自动化验收'}).click();await page.locator('#note-folder').selectOption({label:'验收分组'});await page.waitForFunction(()=>document.querySelector('#breadcrumb').textContent==='验收分组');
+ await page.locator('#float-note').click();await app.waitForEvent('window');const windows=app.windows();const float=windows.find(p=>p!==page);await float.locator('.tiptap img').waitFor();assert.equal(await float.locator('#note-title').inputValue(),'自动化验收：中文便签');
+ await float.locator('#note-title').fill('悬浮窗口同步成功');await float.keyboard.press('Control+s');await page.waitForFunction(()=>document.querySelector('#note-title').value==='悬浮窗口同步成功');
+ await float.locator('[data-window=close]').click();
+ await page.locator('#note-menu').click();await page.locator('[data-menu-action=trash]').click();await page.locator('[data-view=trash]').click();await page.locator('.note-card').filter({hasText:'悬浮窗口同步成功'}).click();assert.equal(await page.locator('.tiptap').getAttribute('contenteditable'),'false');await page.locator('#restore-note').click();await page.locator('[data-view=all]').click();
+ await page.locator('#settings-button').click();await page.locator('[data-setting=theme]').click();assert.ok(await page.locator('body').evaluate(el=>el.classList.contains('dark')));await page.locator('#dialog-close').click();await page.screenshot({path:path.join(root,'test-results','dark.png')});
+ await page.locator('#settings-button').click();await page.locator('[data-setting=theme]').click();await page.locator('#dialog-close').click();
+ await page.locator('[data-view=calendar]').click();assert.equal(await page.locator('#calendar').isVisible(),true);await page.locator('[data-view=all]').click();await page.locator('.note-card').filter({hasText:'悬浮窗口同步成功'}).click();
+ const backupPath=path.join(dataDir,'export.json'),htmlPath=path.join(dataDir,'export.html'),txtPath=path.join(dataDir,'export.txt');
+ await app.evaluate(({dialog},file)=>{dialog.showSaveDialog=async()=>({canceled:false,filePath:file});},backupPath);
+ await page.locator('#settings-button').click();await page.locator('[data-setting=export]').click();await page.waitForFunction(()=>document.querySelector('#toast').textContent.includes('完整备份'));assert.ok(JSON.parse(fs.readFileSync(backupPath,'utf8')).notes.some(n=>n.html.includes('data:image/png')));
+ await app.evaluate(({dialog},file)=>{dialog.showOpenDialog=async()=>({canceled:false,filePaths:[file]});},backupPath);
+ await page.locator('[data-setting=import]').click();await page.waitForFunction(()=>document.querySelector('#toast').textContent.includes('现有内容已保留'));await page.locator('#dialog-close').click();assert.equal(await page.locator('.note-card').count(),4);
+ await page.locator('.note-card').filter({hasText:'悬浮窗口同步成功'}).first().click();
+ await app.evaluate(({dialog},file)=>{dialog.showSaveDialog=async()=>({canceled:false,filePath:file});},htmlPath);await page.locator('#note-menu').click();await page.locator('[data-menu-action=html]').click();await page.waitForFunction(()=>document.querySelector('#toast').textContent.includes('便签已导出'));assert.match(fs.readFileSync(htmlPath,'utf8'),/data:image\/png/);
+ await app.evaluate(({dialog},file)=>{dialog.showSaveDialog=async()=>({canceled:false,filePath:file});},txtPath);await page.locator('#note-menu').click();await page.locator('[data-menu-action=txt]').click();await page.waitForTimeout(100);assert.match(fs.readFileSync(txtPath,'utf8'),/持久保存/);
+ await page.locator('#note-title').fill('关闭瞬间也会保存');await page.locator('[data-window=close]').click();await app.close();
+ page=await launch();await page.locator('.note-card').filter({hasText:'关闭瞬间也会保存'}).click();assert.equal(await page.locator('.tiptap img').count(),1);assert.match(await page.locator('.tiptap').innerText(),/持久保存/);assert.equal(await page.locator('#note-folder option:checked').innerText(),'验收分组');
+ assert.deepEqual(errors,[]);console.log('PASS: 创建、中文编辑、待办、图片、搜索、分组、悬浮同步、回收恢复、主题、日历、关闭保存、重启持久化。');console.log('Test data: '+dataDir);
+}finally{if(app)await app.close();}})().catch(e=>{console.error(e);process.exitCode=1;});
