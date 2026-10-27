@@ -1,17 +1,19 @@
 {
   "name": "shiguang-notes",
   "productName": "拾光便签",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "离线图文便签与桌面速记",
   "main": "src/main.cjs",
-  "author": "Local Notes",
-  "license": "MIT",
+  "author": "laobaiai.com",
+  "license": "SEE LICENSE IN LICENSE",
   "scripts": {
     "build": "node scripts/build.cjs",
     "start": "electron .",
     "test": "node --test tests/*.test.cjs",
     "test:ui": "node tests/ui.cjs",
-    "pack": "node scripts/package.cjs"
+    "pack": "node scripts/package.cjs",
+    "installer": "node scripts/package.cjs --installer",
+    "test:features": "node tests/features.cjs"
   },
   "devDependencies": {
     "electron": "^41.0.0",
@@ -37,11 +39,14 @@
       "src/main.cjs",
       "src/preload.cjs",
       "src/store.cjs",
+      "src/contacts.cjs",
       "dist/**/*",
       "package.json",
       "assets/*",
       "LICENSE",
-      "THIRD_PARTY_NOTICES.md"
+      "THIRD_PARTY_NOTICES.md",
+      "LICENSE-MIT-1.0.0",
+      "src/note-lock.cjs"
     ],
     "win": {
       "target": "dir",
@@ -49,6 +54,23 @@
       "signExecutable": false
     },
     "asar": true,
+    "nsis": {
+      "artifactName": "Shiguang-Notes-${version}-Windows-x64-Setup.${ext}",
+      "oneClick": false,
+      "perMachine": false,
+      "allowElevation": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "拾光便签",
+      "installerLanguages": [
+        "zh_CN",
+        "en_US"
+      ],
+      "displayLanguageSelector": true,
+      "deleteAppDataOnUninstall": false,
+      "runAfterFinish": false
+    },
     "electronLanguages": [
       "zh-CN",
       "en-US"

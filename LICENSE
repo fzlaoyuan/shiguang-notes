@@ -1,21 +1,51 @@
-MIT License
+拾光便签非商业使用许可 / Shiguang Notes Noncommercial License
+适用版本 / Applies to: 1.0.1 and later versions carrying this license
 
-Copyright (c) 2026 Local Notes contributors
+Copyright (c) 2026 laobaiai.com
+Earlier project code: Copyright (c) 2026 Local Notes contributors
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+中文
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+1. 本软件免费提供，仅允许个人非商业使用、学习、研究与交流。
+   在遵守本许可的前提下，可以查看、复制、修改本许可覆盖的源码，
+   并免费分享原版或修改版；分享时须完整保留本许可、版权及第三方声明，
+   修改版须说明修改内容及其非官方身份，不得增加收费或商业使用授权。
+2. 禁止商业用途，包括商业经营中的使用、售卖软件或修改版、收费分发、
+   付费服务，以及作为商业产品或服务的一部分进行使用或提供。
+3. 本许可不授予作者名称、标识或商标的使用权，不得暗示作者认可修改版。
+4. 第三方组件仍适用其各自许可，参见 THIRD_PARTY_NOTICES.md 及随附文件。
+   先前按 MIT 许可发布的 1.0.0 版本及其代码保留原许可；本许可不撤回、
+   缩减或追溯限制已按 MIT 获得的权利。原声明保留于 LICENSE-MIT-1.0.0。
+5. 软件按“现状”提供，不作任何明示或默示保证。在适用法律允许的范围内，
+   作者不对使用软件导致的损失承担责任。请自行妥善备份数据。
+6. 不符合上述条件时，不授予对本许可覆盖内容的使用、修改或分发许可。
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+联系作者：https://laobaiai.com
+此为公开源码的非商业许可，不属于 OSI 定义的开源许可。
+
+English
+
+1. This software is free of charge for personal, noncommercial use, learning,
+   research, and exchange. You may inspect, copy, and modify code covered by
+   this license and share original or modified copies free of charge, subject
+   to these terms. Keep this license, copyright notices, and third-party
+   notices intact. Identify modifications and mark modified versions as
+   unofficial. Do not grant commercial-use rights or charge for distribution.
+2. Commercial use is prohibited, including use in business operations, selling
+   the software or derivatives, paid distribution, paid services, or use or
+   provision as part of a commercial product or service.
+3. No rights to the author's name, logos, or trademarks are granted. Do not
+   imply that the author endorses a modified version.
+4. Third-party components retain their own licenses; see THIRD_PARTY_NOTICES.md
+   and accompanying files. Version 1.0.0 and code previously released under MIT
+   retain their original license. This license does not revoke, reduce, or
+   retroactively restrict rights previously granted under MIT. The original
+   notice is preserved in LICENSE-MIT-1.0.0.
+5. The software is provided AS IS, without express or implied warranties. To
+   the extent permitted by applicable law, the author is not liable for losses
+   arising from its use. Maintain your own data backups.
+6. No permission to use, modify, or distribute content covered by this license
+   is granted outside the conditions above.
+
+Contact: https://laobaiai.com
+This is a source-available noncommercial license, not an OSI open-source license.
